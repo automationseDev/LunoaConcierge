@@ -1,0 +1,45 @@
+name: 不具合を報告
+description: Lunoa Conciergeで発生した問題を報告します
+title: "[不具合] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ご報告ありがとうございます。公開Issueになるため、個人情報・APIキー・トークンなどは記載しないでください。
+  - type: textarea
+    id: problem
+    attributes:
+      label: 発生している問題
+      description: 何が起きているか、できるだけ具体的に教えてください。
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現手順
+      description: 問題を再現できる手順を教えてください。
+      placeholder: |
+        1. Lunoaを開く
+        2. 設定を開く
+        3. ○○を押す
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待する動作
+      description: 本来どのように動いてほしいか教えてください。
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 端末・Lunoaバージョン
+      placeholder: 例：Galaxy Z Fold 8 / Android 17 / Lunoa v1.0.0
+    validations:
+      required: true
+  - type: textarea
+    id: additional
+    attributes:
+      label: スクリーンショット・補足（任意）
+      description: 個人情報や秘密情報が映り込んでいないことを確認して添付してください。
