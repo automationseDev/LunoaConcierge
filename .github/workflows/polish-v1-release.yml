@@ -1,0 +1,49 @@
+name: Polish public v1.0.0 release notes
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/polish-v1-release.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  polish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update release notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          cat > notes.md <<'EOF'
+          # Lunoa Concierge v1.0.0
+
+          Lunoa Concierge 初の一般公開版です。
+
+          ## v1.0.0
+
+          - 広告なし
+          - GitHub Releasesのみで配布
+          - 公開GitHub Issuesによるサポート
+          - ホームランチャー
+          - AI会話 / Web検索
+          - フローティングコンシェルジュ
+          - 通知案内
+          - ページ要約
+          - NFCオートメーション / シーン
+          - Concierge Hub / ルーティン
+          - Galaxy Z Foldを含む可変画面サイズへの対応
+
+          以前検討していた広告版・広告解除版・Supporterライセンスは廃止しています。任意の応援の有無による機能差はありません。
+
+          ## APK
+
+          `LunoaConcierge-v1.0.0.apk`
+
+          SHA-256: `929e79dbb85798f69ec799b20c06e59dd13e874c1e8b43673a3e8671135968c6`
+          EOF
+          gh release edit v1.0.0 --repo "${GITHUB_REPOSITORY}" --title "Lunoa Concierge v1.0.0" --notes-file notes.md
