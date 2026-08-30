@@ -1,0 +1,33 @@
+name: 使い方・仕様を問い合わせ
+description: 設定方法や仕様について相談します
+title: "[問い合わせ] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        お問い合わせありがとうございます。公開Issueになるため、個人情報・APIキー・トークンなどは記載しないでください。
+  - type: dropdown
+    id: category
+    attributes:
+      label: カテゴリ
+      options:
+        - 設定方法
+        - 機能・仕様
+        - 更新・インストール
+        - NFC・オートメーション
+        - 通知・フローティング表示
+        - その他
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: お問い合わせ内容
+      description: 知りたいこと・確認したいことを教えてください。
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 端末・Lunoaバージョン（任意）
+      placeholder: 例：Galaxy Z Fold 8 / Lunoa v1.0.0
