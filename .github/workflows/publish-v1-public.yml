@@ -1,0 +1,33 @@
+name: Publish public v1.0.0 release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/publish-v1-public.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download verified v1.0.0 artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fL 'https://sdmntpraustraliaeast.oaiusercontent.com/files/00000000-4314-81fa-8da8-cb26ac602ee5/raw?se=2026-08-30T12%3A31%3A51Z&sp=r&sv=2026-02-06&sr=b&scid=3b843226-56d9-5f50-976e-d65f836f9579&skoid=bb372dd6-3b2a-4af2-b355-c26497ba23cd&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-30T06%3A46%3A29Z&ske=2026-08-31T06%3A46%3A29Z&sks=b&skv=2026-02-06&sig=nRl1oA7EI6lxv9RKeb2J83j3DMooAi7IJHHqIakJ50w%3D' -o build.zip
+          unzip -q build.zip
+          mv app-debug.apk LunoaConcierge-v1.0.0.apk
+          echo '929e79dbb85798f69ec799b20c06e59dd13e874c1e8b43673a3e8671135968c6  LunoaConcierge-v1.0.0.apk' | sha256sum -c -
+      - name: Create public GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh release create v1.0.0 LunoaConcierge-v1.0.0.apk \
+            --repo "${GITHUB_REPOSITORY}" \
+            --title "Lunoa Concierge v1.0.0" \
+            --notes "Lunoa Concierge 初の一般公開版です。\n\n- 広告なし\n- GitHub Releasesのみで配布\n- 公開GitHub Issuesによるサポート\n- ホームランチャー / AI会話 / 通知 / NFCオートメーション / Galaxy Z Fold対応\n\nSHA-256: 929e79dbb85798f69ec799b20c06e59dd13e874c1e8b43673a3e8671135968c6"
