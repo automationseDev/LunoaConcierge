@@ -14,11 +14,10 @@ Lunoa Concierge（ルノア コンシェルジュ）は、Androidスマートフ
 
 ## v1.0.1
 
-- GitHub更新用トークンの入力・保存を廃止
-- 公開GitHub Releasesを認証情報なしで確認
+- 起動時と設定画面から最新版を確認
 - 更新が見つかったとき、新旧バージョンと更新内容をモダンなカードUIで表示
 - 「アップデート」「今回はしない」を選択可能
-- アップデートを選んでも自動インストールせず、Androidのインストール確認画面で最終確認
+- アップデート時はAndroidのインストール確認画面で最終確認
 
 ## 主な機能
 
@@ -33,9 +32,7 @@ Lunoa Concierge（ルノア コンシェルジュ）は、Androidスマートフ
 
 ## 配布
 
-Lunoa Conciergeは **GitHub Releasesのみ** で配布します。Google Play / Galaxy Storeでは現在配布していません。
-
-更新確認にGitHubトークンなどの認証情報は必要ありません。起動時に公開GitHub Releasesを確認し、新しいバージョンがある場合はインストールするかどうかを選択できます。設定画面から手動で確認することもできます。
+Lunoa Conciergeは **GitHub Releases** で配布しています。アプリは起動時に最新版を確認し、新しいバージョンがある場合は更新内容を見てインストールするか選べます。設定画面から手動で確認することもできます。
 
 ➡️ [GitHub Releasesを開く](https://github.com/automationseDev/LunoaConcierge/releases)
 
@@ -54,7 +51,7 @@ Lunoaの開発を応援したい方向けに、任意のサポートを用意し
 - ☕ [コーヒー ¥300](https://donate.stripe.com/3cIcMYgkWcQi7nt2eD6c001)
 - 🍺 [ビール ¥500](https://donate.stripe.com/fZucMY0lY4jMePV8D16c002)
 
-これは完全に任意の応援です。広告解除や機能解放などの特典はありません。
+応援は完全に任意です。応援の有無にかかわらず、利用できるLunoaの機能は同じです。
 
 ## セキュリティ / プライバシー
 
