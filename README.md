@@ -23,12 +23,6 @@ Lunoa Concierge（ルノア コンシェルジュ）は、Androidスマートフ
 - **ルーティン / Concierge Hub** — 通知・おすすめ・日常操作をまとめて管理。
 - **Galaxy Z Fold対応** — 折りたたみ・展開・マルチウィンドウに合わせてUIを調整。
 
-## 広告・有料版について
-
-Lunoa Conciergeには**広告を表示しません**。
-
-以前検討していた広告版、広告解除版、Supporterライセンスは廃止しています。応援の有無による機能差もありません。
-
 ## 配布
 
 Lunoa Conciergeは **GitHub Releasesのみ** で配布します。Google Play / Galaxy Storeでは現在配布していません。
