@@ -7,6 +7,20 @@
   <meta name="description" content="Lunoa Concierge - Androidを自分専用のコンシェルジュがいる端末へ。ホームランチャー、AI会話、通知、NFCオートメーションなどを統合。">
   <title>Lunoa Concierge | Android Personal Concierge</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LHPHBDNL4G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LHPHBDNL4G');
+
+    gtag('event', 'lp_view', {
+      page_location: window.location.href,
+      page_referrer: document.referrer || '(direct)',
+      traffic_source: new URLSearchParams(window.location.search).get('utm_source') || document.referrer || '(direct)'
+    });
+  </script>
 </head>
 <body>
   <div class="glow glow-a"></div>
@@ -32,7 +46,7 @@
         <h1>あなたのAndroidに、<br><strong>いつでもそばにいる<br>コンシェルジュを。</strong></h1>
         <p class="lead">Lunoa Conciergeは、ホームランチャー、AI会話、通知、Web検索、ルーティン、NFCオートメーションをひとつにつなげるAndroid向けパーソナルコンシェルジュです。</p>
         <div class="hero-actions">
-          <a class="button primary" href="https://github.com/automationseDev/LunoaConcierge/releases">最新版をダウンロード</a>
+          <a class="button primary" data-sitepulse-event="file_download" href="https://github.com/automationseDev/LunoaConcierge/releases">最新版をダウンロード</a>
           <a class="button ghost" href="https://github.com/automationseDev/LunoaConcierge/issues">要望・不具合を送る</a>
         </div>
         <div class="chips">
@@ -109,7 +123,7 @@
           <h2>Lunoa Concierge <strong>v1.0.1</strong></h2>
           <p>Android 8.0以降。アプリは最新版を確認し、新しいバージョンがある場合は更新内容を見てインストールするか選べます。設定画面から手動で確認することもできます。</p>
         </div>
-        <a class="button primary large" href="https://github.com/automationseDev/LunoaConcierge/releases">GitHub Releasesを開く <span>→</span></a>
+        <a class="button primary large" data-sitepulse-event="file_download" href="https://github.com/automationseDev/LunoaConcierge/releases">GitHub Releasesを開く <span>→</span></a>
       </div>
     </section>
 
@@ -145,5 +159,18 @@
     <p>Android Personal Concierge · GitHub Distribution</p>
     <div class="footer-links"><a href="https://github.com/automationseDev/LunoaConcierge">Repository</a><a href="https://github.com/automationseDev/LunoaConcierge/releases">Releases</a><a href="https://github.com/automationseDev/LunoaConcierge/issues">Issues</a></div>
   </footer>
+  <script>
+    document.querySelectorAll('[data-sitepulse-event="file_download"]').forEach(function (link) {
+      link.addEventListener('click', function () {
+        gtag('event', 'file_download', {
+          link_url: link.href,
+          link_text: link.textContent.trim(),
+          page_location: window.location.href,
+          page_referrer: document.referrer || '(direct)',
+          transport_type: 'beacon'
+        });
+      });
+    });
+  </script>
 </body>
 </html>
