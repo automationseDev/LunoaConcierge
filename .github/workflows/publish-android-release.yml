@@ -11,79 +11,10 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     permissions:
       contents: write
-      pages: write
-      id-token: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Update v1.0.5 public metadata
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          readme = Path('README.md')
-          text = readme.read_text(encoding='utf-8')
-          text = text.replace('**Latest: v1.0.4 / Android 8.0+ / 広告なし**',
-                              '**Latest: v1.0.5 / Android 8.0+ / 広告なし**', 1)
-          marker = '## v1.0.4\n\n- Bug Fix\n'
-          replacement = ('## v1.0.5\n\n'
-                         '- ホームのお気に入りアイコン間隔を5段階で調整可能\n'
-                         '- 17個以上のお気に入りを実際の行数に合わせて均等配置\n'
-                         '- アイコン同士が詰まりすぎる表示を改善\n\n'
-                         + marker)
-          if marker not in text:
-              raise SystemExit('README version marker not found')
-          text = text.replace(marker, replacement, 1)
-          text = text.replace('お気に入りアプリを最大32個登録。表示数を設定から変更可能。',
-                              'お気に入りアプリを最大32個登録。表示数とアイコン間隔を設定から変更可能。', 1)
-          readme.write_text(text, encoding='utf-8')
-
-          page = Path('docs/index.html')
-          html = page.read_text(encoding='utf-8')
-          html = html.replace('LUNOA CONCIERGE v1.0.4', 'LUNOA CONCIERGE v1.0.5', 1)
-          html = html.replace('/releases/tag/v1.0.4', '/releases/tag/v1.0.5')
-          html = html.replace('<span>v1.0.4 · Bug Fix</span>',
-                              '<span>v1.0.5 · Icon Spacing</span>', 1)
-          html = html.replace('設定から表示数を1〜32個で変更できます。スマートなアプリ一覧と組み合わせて、普段のホーム画面そのものをLunoaにできます。',
-                              '設定から表示数を1〜32個で変更でき、アイコン間隔も5段階で調整できます。スマートなアプリ一覧と組み合わせて、普段のホーム画面そのものをLunoaにできます。', 1)
-          html = html.replace('Lunoa Concierge <strong>v1.0.4</strong>',
-                              'Lunoa Concierge <strong>v1.0.5</strong>', 1)
-          html = html.replace('<p><strong>Bug Fix</strong>。Android 8.0以降。',
-                              '<p><strong>お気に入りアイコンの間隔調整に対応。</strong> 5段階から好みの間隔を選べます。Android 8.0以降。', 1)
-          if 'v1.0.4' in html:
-              raise SystemExit('stale v1.0.4 reference remains in LP')
-          page.write_text(html, encoding='utf-8')
-          PY
-          git diff --check
-
-      - name: Restore verified v1.0.5 APK
-        if: ${{ !hashFiles('dist/LunoaConcierge-v1.0.5.apk') }}
-        env:
-          ARTIFACT_URL: "https://sdmntprwestcentralus.oaiusercontent.com/files/00000000-f758-81fb-a0aa-6142aec9206a/raw?se=2026-09-01T13%3A30%3A50Z&sp=r&sv=2026-02-06&sr=b&scid=37d2f6e6-d9db-5acc-bb51-ffe2b489b0eb&skoid=bb372dd6-3b2a-4af2-b355-c26497ba23cd&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-31T23%3A30%3A22Z&ske=2026-09-01T23%3A30%3A22Z&sks=b&skv=2026-02-06&sig=rfRu6d5XpAZb8zIdE9SqdBKxYimf8FFETWxNrGlTNeQ%3D"
-        run: |
-          set -euo pipefail
-          mkdir -p dist
-          curl -fL "$ARTIFACT_URL" -o /tmp/lunoa-v1.0.5.zip
-          unzip -p /tmp/lunoa-v1.0.5.zip app-debug.apk > dist/LunoaConcierge-v1.0.5.apk
-          echo "7a41e5fa21fd730f161070c04374bc62944eebc12d6de2097dd030ee43131a8e  dist/LunoaConcierge-v1.0.5.apk" | sha256sum -c -
-
-      - name: Commit v1.0.5 public files
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md docs/index.html dist/LunoaConcierge-v1.0.5.apk
-          if ! git diff --cached --quiet; then
-            git commit -m "Release v1.0.5 adjustable favorite icon spacing"
-            git push
-          fi
-
       - name: Publish v1.0.5
         env:
           GH_TOKEN: ${{ github.token }}
@@ -104,22 +35,9 @@ jobs:
           else
             gh release create "$TAG" "$APK" --title "Lunoa Concierge $TAG" --notes-file "$NOTES"
           fi
-
       - name: Verify public release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq '.tag_name')" = "v1.0.5"
           gh release view v1.0.5 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.0.5.apk'
-
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload LP
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: docs
-
-      - name: Deploy LP
-        id: deployment
-        uses: actions/deploy-pages@v4
