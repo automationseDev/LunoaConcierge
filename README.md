@@ -6,11 +6,17 @@ Lunoa Concierge（ルノア コンシェルジュ）は、Androidスマートフ
 
 単なるAIチャットではなく、ホームランチャー、アプリ操作、通知、Web検索、ルーティン、NFCオートメーションなど、日常的なスマートフォン操作をひとつにつなげることを目指しています。
 
-**Latest: v1.0.4 / Android 8.0+ / 広告なし**
+**Latest: v1.0.5 / Android 8.0+ / 広告なし**
 
 [公式LP](https://automationseDev.github.io/LunoaConcierge/) ・ [Releases](https://github.com/automationseDev/LunoaConcierge/releases) ・ [要望・不具合・問い合わせ](https://github.com/automationseDev/LunoaConcierge/issues)
 
 ---
+
+## v1.0.5
+
+- ホームのお気に入りアイコン間隔を5段階で調整可能
+- 17個以上のお気に入りを実際の行数に合わせて均等配置
+- アイコン同士が詰まりすぎる表示を改善
 
 ## v1.0.4
 
@@ -27,7 +33,7 @@ Lunoa Concierge（ルノア コンシェルジュ）は、Androidスマートフ
 
 ## 主な機能
 
-- **パーソナルホームランチャー** — お気に入りアプリを最大32個登録。表示数を設定から変更可能。スマートなアプリ一覧にも対応。
+- **パーソナルホームランチャー** — お気に入りアプリを最大32個登録。表示数とアイコン間隔を設定から変更可能。スマートなアプリ一覧にも対応。
 - **AI会話 / Web検索** — 利用者が設定したAIサービスを使って会話や情報検索。
 - **フローティングコンシェルジュ** — 他のアプリ上からLunoaへアクセス。
 - **通知案内** — 許可した通知をLunoaの吹き出しとして端末上で表示。
