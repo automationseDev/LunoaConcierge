@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'dist/LunoaConcierge-v1.0.2.apk'
+      - 'dist/LunoaConcierge-v1.0.3.apk'
       - '.github/workflows/publish-android-release.yml'
   workflow_dispatch:
 
@@ -15,16 +15,18 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Publish v1.0.2
+      - name: Publish v1.0.3
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="v1.0.2"
-          APK="dist/LunoaConcierge-v1.0.2.apk"
+          TAG="v1.0.3"
+          APK="dist/LunoaConcierge-v1.0.3.apk"
           NOTES=$(mktemp)
           cat > "$NOTES" <<'EOF'
-          ## Lunoa Concierge v1.0.2
+          ## Lunoa Concierge v1.0.3
 
+          - スマートアプリ一覧に残っていた16個固定判定を修正
+          - 設定した表示数を全アプリ一覧・フローティング一覧へ反映
           - お気に入りアプリの上限を16個から32個へ拡張
           - 設定画面から表示数を1〜32個で変更可能
           - ホームとフローティングランチャーの多段表示に対応
@@ -40,5 +42,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq '.tag_name')" = "v1.0.2"
-          gh release view v1.0.2 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.0.2.apk'
+          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq '.tag_name')" = "v1.0.3"
+          gh release view v1.0.3 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.0.3.apk'

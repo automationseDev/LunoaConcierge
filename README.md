@@ -6,14 +6,16 @@ Lunoa Concierge（ルノア コンシェルジュ）は、Androidスマートフ
 
 単なるAIチャットではなく、ホームランチャー、アプリ操作、通知、Web検索、ルーティン、NFCオートメーションなど、日常的なスマートフォン操作をひとつにつなげることを目指しています。
 
-**Latest: v1.0.2 / Android 8.0+ / 広告なし**
+**Latest: v1.0.3 / Android 8.0+ / 広告なし**
 
 [公式LP](https://automationseDev.github.io/LunoaConcierge/) ・ [Releases](https://github.com/automationseDev/LunoaConcierge/releases) ・ [要望・不具合・問い合わせ](https://github.com/automationseDev/LunoaConcierge/issues)
 
 ---
 
-## v1.0.2
+## v1.0.3
 
+- スマートアプリ一覧に残っていた16個固定判定を修正
+- 設定した表示数を全アプリ一覧・フローティング一覧へ反映
 - お気に入りアプリの上限を16個から32個へ拡張
 - 設定画面から表示数を1〜32個で変更可能
 - ホームとフローティングランチャーを多段レイアウトへ対応
