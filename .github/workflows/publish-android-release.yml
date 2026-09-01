@@ -15,21 +15,6 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Restore v1.0.4 APK from verified CI artifact
-        if: ${{ !hashFiles('dist/LunoaConcierge-v1.0.4.apk') }}
-        env:
-          ARTIFACT_URL: "https://sdmntprwestus.oaiusercontent.com/files/00000000-dff8-8230-ba36-cb2e38eb942e/raw?se=2026-09-01T13%3A19%3A40Z&sp=r&sv=2026-02-06&sr=b&scid=c90de0d2-3147-59a4-aa18-96be88ce6ce1&skoid=bb372dd6-3b2a-4af2-b355-c26497ba23cd&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-01T01%3A16%3A07Z&ske=2026-09-02T01%3A16%3A07Z&sks=b&skv=2026-02-06&sig=lFvswIK1BvRUaWNdQpIC47fHlWdZJzD0COhPk2uNcN8%3D"
-        run: |
-          set -euo pipefail
-          mkdir -p dist
-          curl -fL "$ARTIFACT_URL" -o /tmp/lunoa-v1.0.4.zip
-          unzip -p /tmp/lunoa-v1.0.4.zip app-debug.apk > dist/LunoaConcierge-v1.0.4.apk
-          echo "d24c45b7b2db28b2a3d54511d9c0a4539fa09faa128cb5726e725763475cc80f  dist/LunoaConcierge-v1.0.4.apk" | sha256sum -c -
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add dist/LunoaConcierge-v1.0.4.apk
-          git commit -m "Add v1.0.4 release APK"
-          git push
       - name: Publish v1.0.4
         env:
           GH_TOKEN: ${{ github.token }}
