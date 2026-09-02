@@ -6,11 +6,18 @@ Lunoa Concierge（ルノア コンシェルジュ）は、Androidスマートフ
 
 単なるAIチャットではなく、ホームランチャー、アプリ操作、通知、Web検索、ルーティン、NFCオートメーションなど、日常的なスマートフォン操作をひとつにつなげることを目指しています。
 
-**Latest: v1.1.0 / Android 8.0+ / 広告なし**
+**Latest: v1.1.1 / Android 8.0+ / 広告なし**
 
 [公式LP](https://automationseDev.github.io/LunoaConcierge/) ・ [Releases](https://github.com/automationseDev/LunoaConcierge/releases) ・ [要望・不具合・問い合わせ](https://github.com/automationseDev/LunoaConcierge/issues)
 
 ---
+
+## v1.1.1
+
+- フローティング内のアプリ一覧をカテゴリ別表示へ刷新
+- コミュニケーション、写真・動画、音楽・メディア、地図・移動、仕事・学習、買い物・金融、ゲーム、ツール、その他へ自動分類
+- カテゴリ見出し、件数バッジ、4列カードを組み合わせたモダンUI
+- 検索、お気に入り追加、最大32件の表示設定はそのまま利用可能
 
 ## v1.1.0
 

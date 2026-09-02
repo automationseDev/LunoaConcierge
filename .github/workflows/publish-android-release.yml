@@ -1,9 +1,11 @@
-name: Publish Migration Develop APK
+name: Publish Android v1.1.1
+
 on:
   push:
     branches: [main]
     paths: ['.github/workflows/publish-android-release.yml']
   workflow_dispatch:
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -11,41 +13,43 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch verified migration develop APK
+      - name: Fetch verified v1.1.1 APK
         env:
-          ARTIFACT_URL: "https://sdmntprwestus.oaiusercontent.com/files/00000000-0670-8230-8e5d-a4f9878ad9c1/raw?se=2026-09-02T12%3A21%3A03Z&sp=r&sv=2026-02-06&sr=b&scid=01a06208-6f21-71f8-8a7c-82203dc874ab&skoid=bb372dd6-3b2a-4af2-b355-c26497ba23cd&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-02T01%3A10%3A28Z&ske=2026-09-03T01%3A10%3A28Z&sks=b&skv=2026-02-06&sig=%2BTXlkXwjqgjd2zBKBLWhfsaZl6LBtAXGVtWB37IP9Vg%3D"
+          ARTIFACT_URL: "https://sdmntprjapaneast.oaiusercontent.com/files/00000000-7ce4-8209-a648-6c5243dbdd12/raw?se=2026-09-02T21%3A37%3A35Z&sp=r&sv=2026-02-06&sr=b&scid=01a063fd-2de8-752b-af6c-d401e5e84403&skoid=bb372dd6-3b2a-4af2-b355-c26497ba23cd&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-02T00%3A09%3A25Z&ske=2026-09-03T00%3A09%3A25Z&sks=b&skv=2026-02-06&sig=BJKJ0UoLSBeHxJ8hhuv1xoaRGMwQ5g97Jo27C3v7a6g%3D"
         run: |
-          curl --fail --location "$ARTIFACT_URL" --output migration.zip
-          unzip migration.zip
-          mv app-debug.apk LunoaConcierge-v1.1.0-migration-develop.apk
-          test -s LunoaConcierge-v1.1.0-migration-develop.apk
-      - name: Add migration APK to public v1.1.0 release
+          curl --fail --location "$ARTIFACT_URL" --output artifact.zip
+          unzip artifact.zip
+          mv app-release.apk LunoaConcierge-v1.1.1.apk
+          test -s LunoaConcierge-v1.1.1.apk
+          echo '56dfb7031e8c19618fe21af06b4ffa3ecbee0519d9845828077c20df57ee1e10  LunoaConcierge-v1.1.1.apk' | sha256sum --check -
+      - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release upload v1.1.0 LunoaConcierge-v1.1.0-migration-develop.apk --clobber
           cat > release-notes.md <<'EOF'
-          ## Lunoa Concierge v1.1.0
+          ## Lunoa Concierge v1.1.1
 
-          - アプリ内に「はじめてガイド・使い方」を追加
-          - 設定のJSONエクスポート／インポートを追加
-          - APIキーなどの機密情報は既定でバックアップ対象外
-          - develop版から正式版への設定移行に対応
-          - 正式パッケージID net.automationse.lunoaconcierge で配布
+          - フローティング内のアプリ一覧をカテゴリ別表示へ刷新
+          - コミュニケーション、写真・動画、音楽・メディア、地図・移動、仕事・学習、買い物・金融、ゲーム、ツール、その他へ自動分類
+          - カテゴリ見出しと件数バッジを備えた4列カードUI
+          - アプリ名検索とお気に入り追加に対応
+          - お気に入り最大32件と表示数設定を維持
 
-          ### develop版から移行する方
+          Android 8.0以降。正式パッケージIDは net.automationse.lunoaconcierge です。
 
-          1. LunoaConcierge-v1.1.0-migration-develop.apk を既存develop版へ上書きインストール
-          2. 設定 → 設定のエクスポート／インポート → エクスポート
-          3. 正式版 LunoaConcierge-v1.1.0.apk をインストール
-          4. 正式版で同じファイルをインポート
-
-          Androidの権限は正式版で再設定してください。移行後はdevelop版をアンインストールできます。
+          SHA-256: 56dfb7031e8c19618fe21af06b4ffa3ecbee0519d9845828077c20df57ee1e10
           EOF
-          gh release edit v1.1.0 --title "Lunoa Concierge v1.1.0" --notes-file release-notes.md --latest
-      - name: Verify both public APKs
+          if gh release view v1.1.1 >/dev/null 2>&1; then
+            gh release upload v1.1.1 LunoaConcierge-v1.1.1.apk --clobber
+            gh release edit v1.1.1 --title 'Lunoa Concierge v1.1.1' --notes-file release-notes.md --latest
+          else
+            gh release create v1.1.1 LunoaConcierge-v1.1.1.apk \
+              --title 'Lunoa Concierge v1.1.1' --notes-file release-notes.md --latest
+          fi
+      - name: Verify public release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release view v1.1.0 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.1.0.apk'
-          gh release view v1.1.0 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.1.0-migration-develop.apk'
+          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.1.1'
+          gh release view v1.1.1 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.1.1.apk'
+
