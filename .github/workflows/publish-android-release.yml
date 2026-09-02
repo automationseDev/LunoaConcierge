@@ -4,7 +4,6 @@ on:
   push:
     branches: [main]
     paths:
-      - 'dist/LunoaConcierge-v1.0.5.apk'
       - '.github/workflows/publish-android-release.yml'
   workflow_dispatch:
 
@@ -15,29 +14,38 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Publish v1.0.5
+      - name: Fetch verified v1.1.0 APK artifact
+        env:
+          ARTIFACT_URL: "https://sdmntprwestus.oaiusercontent.com/files/00000000-be28-8230-a8f2-e9a25573017f/raw?se=2026-09-02T12%3A05%3A24Z&sp=r&sv=2026-02-06&sr=b&scid=01a061fc-5747-761b-8f12-db8d5aecd007&skoid=bb372dd6-3b2a-4af2-b355-c26497ba23cd&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-01T23%3A37%3A18Z&ske=2026-09-02T23%3A37%3A18Z&sks=b&skv=2026-02-06&sig=rSslm08qxibrt4XIwy7zKtAnMGBVk6r3fjbyeRddAwA%3D"
+        run: |
+          curl --fail --location "$ARTIFACT_URL" --output artifact.zip
+          unzip artifact.zip
+          mv app-release.apk LunoaConcierge-v1.1.0.apk
+          test -s LunoaConcierge-v1.1.0.apk
+      - name: Publish v1.1.0
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="v1.0.5"
-          APK="dist/LunoaConcierge-v1.0.5.apk"
-          NOTES=$(mktemp)
-          cat > "$NOTES" <<'EOF'
-          ## Lunoa Concierge v1.0.5
+          cat > release-notes.md <<'EOF'
+          ## Lunoa Concierge v1.1.0
 
-          - ホームのお気に入りアイコン間隔を5段階で調整可能
-          - 17個以上のお気に入りを実際の行数に合わせて均等配置
-          - アイコン同士が詰まりすぎる表示を改善
+          - アプリ内に「はじめてガイド・使い方」を追加
+          - 設定のJSONエクスポート／インポートを追加
+          - APIキーなどの機密情報は既定でバックアップ対象外
+          - develop版から正式版への設定移行に対応
+          - 正式パッケージID net.automationse.lunoaconcierge で配布
+
+          develop版（.dev）とは別アプリとしてインストールされます。旧版で設定をエクスポートし、v1.1.0でインポートしてください。OS権限は再設定が必要です。
           EOF
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" "$APK" --clobber
-            gh release edit "$TAG" --title "Lunoa Concierge $TAG" --notes-file "$NOTES"
+          if gh release view v1.1.0 >/dev/null 2>&1; then
+            gh release upload v1.1.0 LunoaConcierge-v1.1.0.apk --clobber
+            gh release edit v1.1.0 --title "Lunoa Concierge v1.1.0" --notes-file release-notes.md --latest
           else
-            gh release create "$TAG" "$APK" --title "Lunoa Concierge $TAG" --notes-file "$NOTES"
+            gh release create v1.1.0 LunoaConcierge-v1.1.0.apk --title "Lunoa Concierge v1.1.0" --notes-file release-notes.md --latest
           fi
       - name: Verify public release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq '.tag_name')" = "v1.0.5"
-          gh release view v1.0.5 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.0.5.apk'
+          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq '.tag_name')" = "v1.1.0"
+          gh release view v1.1.0 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.1.0.apk'
