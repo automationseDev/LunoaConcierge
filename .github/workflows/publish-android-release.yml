@@ -1,4 +1,4 @@
-name: Publish Android v1.1.1
+name: Publish Android v1.1.2
 
 on:
   push:
@@ -13,43 +13,45 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch verified v1.1.1 APK
+      - name: Fetch verified v1.1.2 APK
         env:
-          ARTIFACT_URL: "https://sdmntprjapaneast.oaiusercontent.com/files/00000000-7ce4-8209-a648-6c5243dbdd12/raw?se=2026-09-02T21%3A37%3A35Z&sp=r&sv=2026-02-06&sr=b&scid=01a063fd-2de8-752b-af6c-d401e5e84403&skoid=bb372dd6-3b2a-4af2-b355-c26497ba23cd&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-02T00%3A09%3A25Z&ske=2026-09-03T00%3A09%3A25Z&sks=b&skv=2026-02-06&sig=BJKJ0UoLSBeHxJ8hhuv1xoaRGMwQ5g97Jo27C3v7a6g%3D"
+          ARTIFACT_URL: "https://sdmntprindiasocentral.oaiusercontent.com/files/00000000-18e4-8211-9f96-3a08656dbb0e/raw?se=2026-09-05T03%3A53%3A13Z&sp=r&sv=2026-02-06&sr=b&scid=f0c2de1a-0e13-597f-9dac-05ea9dae5180&skoid=bb372dd6-3b2a-4af2-b355-c26497ba23cd&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-04T23%3A11%3A15Z&ske=2026-09-05T23%3A11%3A15Z&sks=b&skv=2026-02-06&sig=9yKFVfEkfm94n2OMpfiEkmLrMkwQhGGgV0O/rmf1PwE%3D"
         run: |
           curl --fail --location "$ARTIFACT_URL" --output artifact.zip
           unzip artifact.zip
-          mv app-release.apk LunoaConcierge-v1.1.1.apk
-          test -s LunoaConcierge-v1.1.1.apk
-          echo '56dfb7031e8c19618fe21af06b4ffa3ecbee0519d9845828077c20df57ee1e10  LunoaConcierge-v1.1.1.apk' | sha256sum --check -
+          mv app-release.apk LunoaConcierge-v1.1.2.apk
+          test -s LunoaConcierge-v1.1.2.apk
+          echo 'ec97496bec3ead6ea9fae1eef0407a2f74d9358b659224c7636e97b01ae71360  LunoaConcierge-v1.1.2.apk' | sha256sum --check -
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           cat > release-notes.md <<'EOF'
-          ## Lunoa Concierge v1.1.1
+          ## Lunoa Concierge v1.1.2
 
-          - フローティング内のアプリ一覧をカテゴリ別表示へ刷新
-          - コミュニケーション、写真・動画、音楽・メディア、地図・移動、仕事・学習、買い物・金融、ゲーム、ツール、その他へ自動分類
-          - カテゴリ見出しと件数バッジを備えた4列カードUI
-          - アプリ名検索とお気に入り追加に対応
-          - お気に入り最大32件と表示数設定を維持
+          - Lunoaの「▣ 撮影」で、Lunoa自身のフローティングUIやページ要約カードを除外して撮影
+          - Android 14以降では対象アプリのウィンドウを直接撮影し、YouTubeのPiPなど別アプリの重ね表示を含めないクリーン撮影に対応
+          - スクロール可能な画面では「↕ 縦長にする」から自動スクロール撮影し、重複部分を調整して1枚の縦長PNGへ結合
+          - 縦長撮影後は可能な範囲で元のスクロール位置へ復帰
+          - 撮影画像を端末標準のスクリーンショットアルバムへ保存し、ギャラリーから通常のスクリーンショットと同様に確認可能
+          - v1.1.1のカテゴリ別フローティングアプリ一覧、お気に入り最大32件など既存機能を継続
 
           Android 8.0以降。正式パッケージIDは net.automationse.lunoaconcierge です。
+          Android 14以降でウィンドウ単体のクリーン撮影に対応します。
 
-          SHA-256: 56dfb7031e8c19618fe21af06b4ffa3ecbee0519d9845828077c20df57ee1e10
+          SHA-256: ec97496bec3ead6ea9fae1eef0407a2f74d9358b659224c7636e97b01ae71360
           EOF
-          if gh release view v1.1.1 >/dev/null 2>&1; then
-            gh release upload v1.1.1 LunoaConcierge-v1.1.1.apk --clobber
-            gh release edit v1.1.1 --title 'Lunoa Concierge v1.1.1' --notes-file release-notes.md --latest
+          if gh release view v1.1.2 >/dev/null 2>&1; then
+            gh release upload v1.1.2 LunoaConcierge-v1.1.2.apk --clobber
+            gh release edit v1.1.2 --title 'Lunoa Concierge v1.1.2' --notes-file release-notes.md --latest
           else
-            gh release create v1.1.1 LunoaConcierge-v1.1.1.apk \
-              --title 'Lunoa Concierge v1.1.1' --notes-file release-notes.md --latest
+            gh release create v1.1.2 LunoaConcierge-v1.1.2.apk \
+              --title 'Lunoa Concierge v1.1.2' --notes-file release-notes.md --latest
           fi
       - name: Verify public release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.1.1'
-          gh release view v1.1.1 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.1.1.apk'
+          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.1.2'
+          gh release view v1.1.2 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.1.2.apk'
 
