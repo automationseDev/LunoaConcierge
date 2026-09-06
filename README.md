@@ -6,11 +6,21 @@ Lunoa Concierge（ルノア コンシェルジュ）は、Androidスマートフ
 
 単なるAIチャットではなく、ホームランチャー、アプリ操作、通知、Web検索、ルーティン、NFCオートメーションなど、日常的なスマートフォン操作をひとつにつなげることを目指しています。
 
-**Latest: v1.1.2 / Android 8.0+ / 広告なし**
+**Latest: v1.1.3 / Android 8.0+ / 広告なし**
 
 [公式LP](https://automationseDev.github.io/LunoaConcierge/) ・ [Releases](https://github.com/automationseDev/LunoaConcierge/releases) ・ [要望・不具合・問い合わせ](https://github.com/automationseDev/LunoaConcierge/issues)
 
 ---
+
+## v1.1.3
+
+- 縦長スクリーンショット撮影前に確認ダイアログを表示し、「はい」で開始
+- スクロール後の静止を確認してから撮影する段階キャプチャ方式へ改善
+- 撮影中は「■ 停止して保存」から任意の位置で終了して保存可能
+- 1→2だけでなく2→3以降も重なりを多めに取り、長い画面の接合精度を改善
+- 白背景・追従カード・固定ヘッダー／フッターの影響を抑えて接合位置を判定
+- 接合が不安定な位置は再撮影して確認し、内容の欠落を抑制
+- 最初の通常スクリーンショットは単独でも残し、完成した縦長画像も別途保存
 
 ## v1.1.2
 
