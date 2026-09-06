@@ -7,19 +7,58 @@
   <meta name="description" content="Lunoa Concierge - Androidを自分専用のコンシェルジュがいる端末へ。ホームランチャー、AI会話、通知、NFCオートメーション、クリーン撮影・縦長スクリーンショットなどを統合。">
   <title>Lunoa Concierge | Android Personal Concierge</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LHPHBDNL4G"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-LHPHBDNL4G');
+    (function () {
+      var internalParam = new URLSearchParams(window.location.search).get('sitepulse_internal');
 
-    gtag('event', 'lp_view', {
-      page_location: window.location.href,
-      page_referrer: document.referrer || '(direct)',
-      traffic_source: new URLSearchParams(window.location.search).get('utm_source') || document.referrer || '(direct)'
-    });
+      try {
+        if (internalParam === '1') {
+          localStorage.setItem('sitepulse_internal_user', '1');
+          document.cookie = 'sitepulse_internal_user=1; path=/; max-age=315360000; SameSite=Lax; Secure';
+        } else if (internalParam === '0') {
+          localStorage.removeItem('sitepulse_internal_user');
+          document.cookie = 'sitepulse_internal_user=; path=/; max-age=0; SameSite=Lax; Secure';
+        }
+      } catch (error) {
+        // Cookie remains available when localStorage is blocked.
+      }
+
+      var cookieInternal = document.cookie.split(';').some(function (cookie) {
+        return cookie.trim() === 'sitepulse_internal_user=1';
+      });
+      var storageInternal = false;
+      try {
+        storageInternal = localStorage.getItem('sitepulse_internal_user') === '1';
+      } catch (error) {
+        // Use the cookie result only.
+      }
+
+      window.sitepulseInternalUser = cookieInternal || storageInternal;
+
+      if (internalParam === '1' || internalParam === '0') {
+        var cleanUrl = new URL(window.location.href);
+        cleanUrl.searchParams.delete('sitepulse_internal');
+        window.history.replaceState({}, document.title, cleanUrl.href);
+      }
+
+      if (window.sitepulseInternalUser) return;
+
+      var googleTag = document.createElement('script');
+      googleTag.async = true;
+      googleTag.src = 'https://www.googletagmanager.com/gtag/js?id=G-LHPHBDNL4G';
+      document.head.appendChild(googleTag);
+
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', 'G-LHPHBDNL4G');
+
+      window.gtag('event', 'lp_view', {
+        page_location: window.location.href,
+        page_referrer: document.referrer || '(direct)',
+        traffic_source: new URLSearchParams(window.location.search).get('utm_source') || document.referrer || '(direct)'
+      });
+    })();
   </script>
 </head>
 <body>
@@ -164,7 +203,8 @@
   <script>
     document.querySelectorAll('[data-sitepulse-event="file_download"]').forEach(function (link) {
       link.addEventListener('click', function () {
-        gtag('event', 'file_download', {
+        if (window.sitepulseInternalUser || typeof window.gtag !== 'function') return;
+        window.gtag('event', 'file_download', {
           link_url: link.href,
           link_text: link.textContent.trim(),
           page_location: window.location.href,
