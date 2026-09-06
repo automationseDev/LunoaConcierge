@@ -1,4 +1,4 @@
-name: Publish Android v1.1.2
+name: Publish Android v1.1.3
 
 on:
   push:
@@ -13,45 +13,99 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch verified v1.1.2 APK
+
+      - name: Fetch verified v1.1.3 APK
         env:
-          ARTIFACT_URL: "https://sdmntprindiasocentral.oaiusercontent.com/files/00000000-18e4-8211-9f96-3a08656dbb0e/raw?se=2026-09-05T03%3A53%3A13Z&sp=r&sv=2026-02-06&sr=b&scid=f0c2de1a-0e13-597f-9dac-05ea9dae5180&skoid=bb372dd6-3b2a-4af2-b355-c26497ba23cd&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-04T23%3A11%3A15Z&ske=2026-09-05T23%3A11%3A15Z&sks=b&skv=2026-02-06&sig=9yKFVfEkfm94n2OMpfiEkmLrMkwQhGGgV0O/rmf1PwE%3D"
+          ARTIFACT_URL: "https://sdmntprjapaneast.oaiusercontent.com/files/00000000-4578-8209-a85d-ab39d7bc1af9/raw?se=2026-09-06T01%3A05%3A12Z&sp=r&sv=2026-02-06&sr=b&scid=533aa47a-7397-5c8c-9730-51344abf74f2&skoid=bb372dd6-3b2a-4af2-b355-c26497ba23cd&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-05T23%3A33%3A25Z&ske=2026-09-06T23%3A33%3A25Z&sks=b&skv=2026-02-06&sig=0wLNedm%2BEt/%2BKFSbHQh/3OLySZlUdc5ofmJz/voyv08%3D"
         run: |
           curl --fail --location "$ARTIFACT_URL" --output artifact.zip
           unzip artifact.zip
-          mv app-release.apk LunoaConcierge-v1.1.2.apk
-          test -s LunoaConcierge-v1.1.2.apk
-          echo 'ec97496bec3ead6ea9fae1eef0407a2f74d9358b659224c7636e97b01ae71360  LunoaConcierge-v1.1.2.apk' | sha256sum --check -
+          mv app-release.apk LunoaConcierge-v1.1.3.apk
+          test -s LunoaConcierge-v1.1.3.apk
+          echo 'b6ef158034ab2a3c67949f461027605055640bbf6b7003dc18ace85baabd4f08  LunoaConcierge-v1.1.3.apk' | sha256sum --check -
+
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           cat > release-notes.md <<'EOF'
-          ## Lunoa Concierge v1.1.2
+          ## Lunoa Concierge v1.1.3
 
-          - Lunoaの「▣ 撮影」で、Lunoa自身のフローティングUIやページ要約カードを除外して撮影
-          - Android 14以降では対象アプリのウィンドウを直接撮影し、YouTubeのPiPなど別アプリの重ね表示を含めないクリーン撮影に対応
-          - スクロール可能な画面では「↕ 縦長にする」から自動スクロール撮影し、重複部分を調整して1枚の縦長PNGへ結合
-          - 縦長撮影後は可能な範囲で元のスクロール位置へ復帰
-          - 撮影画像を端末標準のスクリーンショットアルバムへ保存し、ギャラリーから通常のスクリーンショットと同様に確認可能
-          - v1.1.1のカテゴリ別フローティングアプリ一覧、お気に入り最大32件など既存機能を継続
+          - 縦長スクリーンショットを安定化。通常撮影後に「縦長スクリーンショットを撮影しますか？」で開始を選択
+          - 自動スクロール後に画面の静止を確認してから各フレームを採用し、スクロール途中の取り逃しを抑制
+          - 撮影中は「■ 停止して保存」を表示し、任意の位置で停止してそこまでを1枚の縦長PNGとして保存可能
+          - 1枚目→2枚目だけでなく、2枚目→3枚目以降も重なりを多めに確保して接合精度を改善
+          - 白背景や追従カード、固定ヘッダー／フッターの影響を抑えて重複部分を判定
+          - 接合信頼度が低い位置は再撮影して再判定し、途中の欠落を抑制
+          - 最初の通常スクリーンショットは従来どおり単独でも保存し、縦長画像も別途保存
+          - Lunoa自身やYouTube PiPなど別アプリの重ね表示を避けるクリーン撮影を継続
+          - 画像は端末標準のスクリーンショットアルバムへ保存
 
           Android 8.0以降。正式パッケージIDは net.automationse.lunoaconcierge です。
-          Android 14以降でウィンドウ単体のクリーン撮影に対応します。
+          Android 14以降で対象アプリのウィンドウ単体クリーン撮影に対応します。
 
-          SHA-256: ec97496bec3ead6ea9fae1eef0407a2f74d9358b659224c7636e97b01ae71360
+          SHA-256: b6ef158034ab2a3c67949f461027605055640bbf6b7003dc18ace85baabd4f08
           EOF
-          if gh release view v1.1.2 >/dev/null 2>&1; then
-            gh release upload v1.1.2 LunoaConcierge-v1.1.2.apk --clobber
-            gh release edit v1.1.2 --title 'Lunoa Concierge v1.1.2' --notes-file release-notes.md --latest
+          if gh release view v1.1.3 >/dev/null 2>&1; then
+            gh release upload v1.1.3 LunoaConcierge-v1.1.3.apk --clobber
+            gh release edit v1.1.3 --title 'Lunoa Concierge v1.1.3' --notes-file release-notes.md --latest
           else
-            gh release create v1.1.2 LunoaConcierge-v1.1.2.apk \
-              --title 'Lunoa Concierge v1.1.2' --notes-file release-notes.md --latest
+            gh release create v1.1.3 LunoaConcierge-v1.1.3.apk \
+              --title 'Lunoa Concierge v1.1.3' --notes-file release-notes.md --latest
           fi
+
+      - name: Update README and LP for v1.1.3
+        run: |
+          python <<'PY'
+          from pathlib import Path
+
+          readme = Path('README.md')
+          text = readme.read_text(encoding='utf-8')
+          text = text.replace('**Latest: v1.1.2 / Android 8.0+ / 広告なし**',
+                              '**Latest: v1.1.3 / Android 8.0+ / 広告なし**')
+          if '## v1.1.3' not in text:
+              section = '''## v1.1.3
+
+- 縦長スクリーンショット撮影前に確認ダイアログを表示し、「はい」で開始
+- スクロール後の静止を確認してから撮影する段階キャプチャ方式へ改善
+- 撮影中は「■ 停止して保存」から任意の位置で終了して保存可能
+- 1→2だけでなく2→3以降も重なりを多めに取り、長い画面の接合精度を改善
+- 白背景・追従カード・固定ヘッダー／フッターの影響を抑えて接合位置を判定
+- 接合が不安定な位置は再撮影して確認し、内容の欠落を抑制
+- 最初の通常スクリーンショットは単独でも残し、完成した縦長画像も別途保存
+
+'''
+              text = text.replace('## v1.1.2\n', section + '## v1.1.2\n', 1)
+          readme.write_text(text, encoding='utf-8')
+
+          lp = Path('docs/index.html')
+          html = lp.read_text(encoding='utf-8')
+          html = html.replace('LUNOA CONCIERGE v1.1.2', 'LUNOA CONCIERGE v1.1.3')
+          html = html.replace('releases/tag/v1.1.2', 'releases/tag/v1.1.3')
+          html = html.replace('v1.1.2 · Clean & Long Screenshot', 'v1.1.3 · Stable Long Screenshot')
+          html = html.replace('<h2>Lunoa Concierge <strong>v1.1.2</strong></h2>',
+                              '<h2>Lunoa Concierge <strong>v1.1.3</strong></h2>')
+          html = html.replace(
+              'Lunoa自身やPiPなどの重ね表示を避けて背面アプリを撮影。スクロール可能な画面は自動で送りながら複数枚をつなぎ、1枚の縦長画像としてスクリーンショットアルバムへ保存できます。',
+              'Lunoa自身やPiPなどの重ね表示を避けて背面アプリを撮影。縦長撮影はスクロール後の静止確認と重なり解析でつなぎ、撮影中は停止して保存することもできます。')
+          old_download = '<p><strong>スクリーンショット機能を大幅に強化。</strong> Lunoa自身やYouTube PiPなどの重ね表示を避けたクリーン撮影に加え、スクロール可能な画面を自動で送り、複数の撮影結果を1枚の縦長PNGへ結合できます。画像は端末標準のスクリーンショットアルバムへ保存。Android 8.0以降。</p>'
+          new_download = '<p><strong>縦長スクリーンショットの接合精度をさらに改善。</strong> 撮影後に縦長撮影を選択すると、画面を段階的にスクロールして静止を確認しながら取得。2枚目以降の継ぎ目も重なりを多めに解析し、撮影中は「停止して保存」で任意の位置までを1枚にできます。最初の通常スクリーンショットも別途残ります。Android 8.0以降。</p>'
+          html = html.replace(old_download, new_download)
+          lp.write_text(html, encoding='utf-8')
+          PY
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md docs/index.html
+          if ! git diff --cached --quiet; then
+            git commit -m 'docs: update Lunoa Concierge v1.1.3'
+            git push
+          fi
+
       - name: Verify public release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.1.2'
-          gh release view v1.1.2 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.1.2.apk'
-
+          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.1.3'
+          gh release view v1.1.3 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.1.3.apk'
+          test "$(gh release view v1.1.3 --json assets --jq '.assets[] | select(.name=="LunoaConcierge-v1.1.3.apk") | .digest')" = 'sha256:b6ef158034ab2a3c67949f461027605055640bbf6b7003dc18ace85baabd4f08'
