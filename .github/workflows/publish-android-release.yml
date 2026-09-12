@@ -1,4 +1,4 @@
-name: Publish Android v1.1.3
+name: Publish Android v1.1.15
 
 on:
   push:
@@ -13,46 +13,42 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch verified v1.1.3 APK
+      - name: Fetch verified v1.1.15 APK
         env:
-          ARTIFACT_URL: "https://sdmntprwestus.oaiusercontent.com/files/00000000-c654-8230-a22c-08d16d56dc6d/raw?se=2026-09-06T01%3A06%3A29Z&sp=r&sv=2026-02-06&sr=b&scid=7eb7ae19-b7c9-531b-9b9e-d6fd41d40d6c&skoid=bb372dd6-3b2a-4af2-b355-c26497ba23cd&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-05T02%3A15%3A05Z&ske=2026-09-06T02%3A15%3A05Z&sks=b&skv=2026-02-06&sig=w4T9Efe9VhluZ%2BHneAhT4veeCaAN0sBkjNzzFHDoCRs%3D"
+          ARTIFACT_URL: "https://sdmntprkoreacentral.oaiusercontent.com/files/00000000-eb20-8206-a9bd-6c777536633e/raw?se=2026-09-12T21%3A53%3A19Z&sp=r&sv=2026-02-06&sr=b&scid=e37b5809-ab3d-5c2c-a56e-c6cb397839e3&skoid=bb372dd6-3b2a-4af2-b355-c26497ba23cd&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-12T19%3A35%3A21Z&ske=2026-09-13T19%3A35%3A21Z&sks=b&skv=2026-02-06&sig=nxB62Pm1no46zgQq8XyrO%2Bakpdm6WbVN9/L9u7nbjgw%3D"
         run: |
           curl --fail --location "$ARTIFACT_URL" --output artifact.zip
           unzip artifact.zip
-          mv app-release.apk LunoaConcierge-v1.1.3.apk
-          test -s LunoaConcierge-v1.1.3.apk
-          echo 'b6ef158034ab2a3c67949f461027605055640bbf6b7003dc18ace85baabd4f08  LunoaConcierge-v1.1.3.apk' | sha256sum --check -
+          mv app-release.apk LunoaConcierge-v1.1.15.apk
+          test -s LunoaConcierge-v1.1.15.apk
+          echo '5f1fbaa7af96f1df340f42b843b3571a1e696fe23fa3e2a6ff726cfd2064b339  LunoaConcierge-v1.1.15.apk' | sha256sum --check -
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           cat > release-notes.md <<'EOF'
-          ## Lunoa Concierge v1.1.3
+          ## Lunoa Concierge v1.1.15
 
-          - 縦長スクリーンショットを安定化し、通常撮影後に確認してから縦長撮影を開始
-          - スクロール後に画面の静止を確認してから各フレームを採用し、内容の取り逃しを抑制
-          - 撮影中は「■ 停止して保存」を表示し、任意の位置で停止してそこまでを1枚の縦長PNGとして保存可能
-          - 1枚目→2枚目だけでなく、2枚目→3枚目以降も重なりを多めに確保して接合精度を改善
-          - 白背景、追従カード、固定ヘッダー／フッターの影響を抑えて接合位置を判定
-          - 接合信頼度が低い位置は再撮影して再判定
-          - 最初の通常スクリーンショットは単独でも残し、完成した縦長画像も別途保存
-          - Lunoa自身やYouTube PiPなどの重ね表示を避けるクリーン撮影を継続
-          - 画像は端末標準のスクリーンショットアルバムへ保存
+          - ホーム画面の時刻をタップすると時計アプリを起動
+          - ホーム画面の日付をタップするとカレンダーアプリを起動
+          - 設定画面から、時刻タップで開く時計アプリを自由に選択可能
+          - 設定画面から、日付タップで開くカレンダーアプリを自由に選択可能
+          - 未設定時は端末標準の時計／カレンダーを使用
+          - 選択したアプリが削除されている場合も端末標準アプリへフォールバック
 
           Android 8.0以降。正式パッケージIDは net.automationse.lunoaconcierge です。
-          Android 14以降で対象アプリのウィンドウ単体クリーン撮影に対応します。
 
-          SHA-256: b6ef158034ab2a3c67949f461027605055640bbf6b7003dc18ace85baabd4f08
+          SHA-256: 5f1fbaa7af96f1df340f42b843b3571a1e696fe23fa3e2a6ff726cfd2064b339
           EOF
-          if gh release view v1.1.3 >/dev/null 2>&1; then
-            gh release upload v1.1.3 LunoaConcierge-v1.1.3.apk --clobber
-            gh release edit v1.1.3 --title 'Lunoa Concierge v1.1.3' --notes-file release-notes.md --latest
+          if gh release view v1.1.15 >/dev/null 2>&1; then
+            gh release upload v1.1.15 LunoaConcierge-v1.1.15.apk --clobber
+            gh release edit v1.1.15 --title 'Lunoa Concierge v1.1.15' --notes-file release-notes.md --latest
           else
-            gh release create v1.1.3 LunoaConcierge-v1.1.3.apk --title 'Lunoa Concierge v1.1.3' --notes-file release-notes.md --latest
+            gh release create v1.1.15 LunoaConcierge-v1.1.15.apk --title 'Lunoa Concierge v1.1.15' --notes-file release-notes.md --latest
           fi
       - name: Verify public release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.1.3'
-          gh release view v1.1.3 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.1.3.apk'
+          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.1.15'
+          gh release view v1.1.15 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.1.15.apk'
