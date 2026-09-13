@@ -1,4 +1,4 @@
-name: Publish Android v1.1.17
+name: Publish Android v1.2.0
 
 on:
   push:
@@ -13,33 +13,36 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Verify v1.1.17 APK
+      - name: Verify v1.2.0 APK
         run: |
-          cp dist/LunoaConcierge-v1.1.17.apk LunoaConcierge-v1.1.17.apk
-          test -s LunoaConcierge-v1.1.17.apk
-          echo 'a168265788ba6438190fc41c59e4da25818feecf24de6aa2a5f87b8c03fd40a0  LunoaConcierge-v1.1.17.apk' | sha256sum --check -
+          cp dist/LunoaConcierge-v1.2.0.apk LunoaConcierge-v1.2.0.apk
+          test -s LunoaConcierge-v1.2.0.apk
+          echo 'ede4d747fb70e0aaaedbd6e75c7aa86754d2ec29430a3488da27d40060b598da  LunoaConcierge-v1.2.0.apk' | sha256sum --check -
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           cat > release-notes.md <<'EOF'
-          ## Lunoa Concierge v1.1.17
+          ## Lunoa Concierge v1.2.0
 
-          - 細かなバグの修正
+          - Lunoa単独で使える「何でもメモ」を追加
+          - Android共有、手動作成、検索、編集、削除、複数画像の差し込みに対応
+          - Z Fold Workspaceを端末非依存の「Lunoa Workspace」へ刷新
+          - MemoBrain連携をLunoa内蔵メモへ置き換え
 
           Android 8.0以降。正式パッケージIDは net.automationse.lunoaconcierge です。
 
-          SHA-256: a168265788ba6438190fc41c59e4da25818feecf24de6aa2a5f87b8c03fd40a0
+          SHA-256: ede4d747fb70e0aaaedbd6e75c7aa86754d2ec29430a3488da27d40060b598da
           EOF
-          if gh release view v1.1.17 >/dev/null 2>&1; then
-            gh release upload v1.1.17 LunoaConcierge-v1.1.17.apk --clobber
-            gh release edit v1.1.17 --title 'Lunoa Concierge v1.1.17' --notes-file release-notes.md --latest
+          if gh release view v1.2.0 >/dev/null 2>&1; then
+            gh release upload v1.2.0 LunoaConcierge-v1.2.0.apk --clobber
+            gh release edit v1.2.0 --title 'Lunoa Concierge v1.2.0' --notes-file release-notes.md --latest
           else
-            gh release create v1.1.17 LunoaConcierge-v1.1.17.apk --title 'Lunoa Concierge v1.1.17' --notes-file release-notes.md --latest
+            gh release create v1.2.0 LunoaConcierge-v1.2.0.apk --title 'Lunoa Concierge v1.2.0' --notes-file release-notes.md --latest
           fi
       - name: Verify public release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.1.17'
-          gh release view v1.1.17 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.1.17.apk'
+          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.2.0'
+          gh release view v1.2.0 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.2.0.apk'
