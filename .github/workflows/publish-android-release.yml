@@ -1,4 +1,4 @@
-name: Publish Android v1.3.1
+name: Publish Android v1.3.2
 
 on:
   push:
@@ -13,36 +13,37 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Verify v1.3.1 APK
+      - name: Verify v1.3.2 APK
         run: |
-          cp dist/LunoaConcierge-v1.3.1.apk LunoaConcierge-v1.3.1.apk
-          test -s LunoaConcierge-v1.3.1.apk
-          echo 'b21592e57e9f80d7778858705db089dd001106e184438907cd361ac5f1cccc44  LunoaConcierge-v1.3.1.apk' | sha256sum --check -
+          cp dist/LunoaConcierge-v1.3.2.apk LunoaConcierge-v1.3.2.apk
+          test -s LunoaConcierge-v1.3.2.apk
+          echo 'e0cc302a30dc53e3499c827b0b69cb1851ae102d171d70280eebca4b16f9a492  LunoaConcierge-v1.3.2.apk' | sha256sum --check -
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           cat > release-notes.md <<'EOF'
-          ## Lunoa Concierge v1.3.1
+          ## Lunoa Concierge v1.3.2
 
-          - フローティングLunoa下部のショートカットを個別に表示・非表示
-          - アイコン＋名前／アイコンのみの表示形式を選択可能
-          - 上下ボタンと長押しドラッグによる並び替えに対応
-          - ホームのショートカットとは別に設定を保存
-          - スクリーンショット操作の名称を「画面撮影」に変更
+          - 何でもメモの内容からカテゴリーを端末内で自動分類
+          - 編集画面からカテゴリーを手動選択し、自動分類へ戻す操作にも対応
+          - メモへ最大12個のタグを設定可能
+          - 一覧でカテゴリーとタグを表示し、カテゴリー別に絞り込み
+          - 通常検索と横断検索の対象にカテゴリーとタグを追加
+          - 既存メモも内容からカテゴリーを補完
 
           Android 8.0以降。正式パッケージIDは net.automationse.lunoaconcierge です。
-          SHA-256: b21592e57e9f80d7778858705db089dd001106e184438907cd361ac5f1cccc44
+          SHA-256: e0cc302a30dc53e3499c827b0b69cb1851ae102d171d70280eebca4b16f9a492
           EOF
-          if gh release view v1.3.1 >/dev/null 2>&1; then
-            gh release upload v1.3.1 LunoaConcierge-v1.3.1.apk --clobber
-            gh release edit v1.3.1 --title 'Lunoa Concierge v1.3.1' --notes-file release-notes.md --latest
+          if gh release view v1.3.2 >/dev/null 2>&1; then
+            gh release upload v1.3.2 LunoaConcierge-v1.3.2.apk --clobber
+            gh release edit v1.3.2 --title 'Lunoa Concierge v1.3.2' --notes-file release-notes.md --latest
           else
-            gh release create v1.3.1 LunoaConcierge-v1.3.1.apk --title 'Lunoa Concierge v1.3.1' --notes-file release-notes.md --latest
+            gh release create v1.3.2 LunoaConcierge-v1.3.2.apk --title 'Lunoa Concierge v1.3.2' --notes-file release-notes.md --latest
           fi
       - name: Verify public release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.3.1'
-          gh release view v1.3.1 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.3.1.apk'
+          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.3.2'
+          gh release view v1.3.2 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.3.2.apk'
