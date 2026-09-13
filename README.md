@@ -6,11 +6,18 @@ Lunoa Concierge（ルノア コンシェルジュ）は、Androidスマートフ
 
 単なるAIチャットではなく、ホームランチャー、アプリ操作、通知、Web検索、ルーティン、NFCオートメーションなど、日常的なスマートフォン操作をひとつにつなげることを目指しています。
 
-**Latest: v1.3.2 / Android 8.0+ / 広告なし**
+**Latest: v1.3.3 / Android 8.0+ / 広告なし**
 
 [公式LP](https://automationseDev.github.io/LunoaConcierge/) ・ [Releases](https://github.com/automationseDev/LunoaConcierge/releases) ・ [要望・不具合・問い合わせ](https://github.com/automationseDev/LunoaConcierge/issues)
 
 ---
+
+## v1.3.3
+
+- 何でもメモのカテゴリー選択をモダンな専用画面へ刷新
+- 自動分類候補・標準カテゴリー・独自カテゴリーを分かりやすく整理
+- 独自カテゴリーを最大30個まで追加し、選択・削除可能
+- 独自カテゴリーを削除しても、設定済みメモのカテゴリー情報は保持
 
 ## v1.3.2
 
