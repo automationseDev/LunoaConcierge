@@ -1,4 +1,4 @@
-name: Publish Android v1.3.0
+name: Publish Android v1.3.1
 
 on:
   push:
@@ -13,36 +13,35 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Verify v1.3.0 APK
+      - name: Verify v1.3.1 APK
         run: |
-          cp dist/LunoaConcierge-v1.3.0.apk LunoaConcierge-v1.3.0.apk
-          test -s LunoaConcierge-v1.3.0.apk
-          echo 'dc99c48449fc902c1df7215c02b80c34749ba04729eeaf1343f0e14528e0194e  LunoaConcierge-v1.3.0.apk' | sha256sum --check -
+          cp dist/LunoaConcierge-v1.3.1.apk LunoaConcierge-v1.3.1.apk
+          test -s LunoaConcierge-v1.3.1.apk
+          echo 'd9b784b800389c63290ccf5c9811b89fe59f63e177dc32c90674197df195b4eb  LunoaConcierge-v1.3.1.apk' | sha256sum --check -
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           cat > release-notes.md <<'EOF'
-          ## Lunoa Concierge v1.3.0
+          ## Lunoa Concierge v1.3.1
 
-          - 「今日のLunoa」で天気、ニュース、予定、リマインダー、最近のメモや通知をまとめて確認
-          - 自然な言葉からメモ、リマインダー、カレンダー、検索の操作を提案し、確認後に実行
-          - AIトークン設定時はGemini/OpenAIを利用し、未設定時は端末内で判断
-          - ホームのショートカットを表示・非表示、アイコン表示、並び順までカスタマイズ
-          - 設定画面で上下操作とドラッグ操作による並び替えに対応し、ショートカット間隔を統一
+          - フローティングLunoa下部のショートカットを個別に表示・非表示
+          - アイコン＋名前／アイコンのみの表示形式を選択可能
+          - 上下ボタンと長押しドラッグによる並び替えに対応
+          - ホームのショートカットとは別に設定を保存
 
           Android 8.0以降。正式パッケージIDは net.automationse.lunoaconcierge です。
-          SHA-256: dc99c48449fc902c1df7215c02b80c34749ba04729eeaf1343f0e14528e0194e
+          SHA-256: d9b784b800389c63290ccf5c9811b89fe59f63e177dc32c90674197df195b4eb
           EOF
-          if gh release view v1.3.0 >/dev/null 2>&1; then
-            gh release upload v1.3.0 LunoaConcierge-v1.3.0.apk --clobber
-            gh release edit v1.3.0 --title 'Lunoa Concierge v1.3.0' --notes-file release-notes.md --latest
+          if gh release view v1.3.1 >/dev/null 2>&1; then
+            gh release upload v1.3.1 LunoaConcierge-v1.3.1.apk --clobber
+            gh release edit v1.3.1 --title 'Lunoa Concierge v1.3.1' --notes-file release-notes.md --latest
           else
-            gh release create v1.3.0 LunoaConcierge-v1.3.0.apk --title 'Lunoa Concierge v1.3.0' --notes-file release-notes.md --latest
+            gh release create v1.3.1 LunoaConcierge-v1.3.1.apk --title 'Lunoa Concierge v1.3.1' --notes-file release-notes.md --latest
           fi
       - name: Verify public release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.3.0'
-          gh release view v1.3.0 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.3.0.apk'
+          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.3.1'
+          gh release view v1.3.1 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.3.1.apk'
