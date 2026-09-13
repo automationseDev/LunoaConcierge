@@ -17,7 +17,7 @@ jobs:
         run: |
           cp dist/LunoaConcierge-v1.3.1.apk LunoaConcierge-v1.3.1.apk
           test -s LunoaConcierge-v1.3.1.apk
-          echo 'd9b784b800389c63290ccf5c9811b89fe59f63e177dc32c90674197df195b4eb  LunoaConcierge-v1.3.1.apk' | sha256sum --check -
+          echo 'b21592e57e9f80d7778858705db089dd001106e184438907cd361ac5f1cccc44  LunoaConcierge-v1.3.1.apk' | sha256sum --check -
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -29,9 +29,10 @@ jobs:
           - アイコン＋名前／アイコンのみの表示形式を選択可能
           - 上下ボタンと長押しドラッグによる並び替えに対応
           - ホームのショートカットとは別に設定を保存
+          - スクリーンショット操作の名称を「画面撮影」に変更
 
           Android 8.0以降。正式パッケージIDは net.automationse.lunoaconcierge です。
-          SHA-256: d9b784b800389c63290ccf5c9811b89fe59f63e177dc32c90674197df195b4eb
+          SHA-256: b21592e57e9f80d7778858705db089dd001106e184438907cd361ac5f1cccc44
           EOF
           if gh release view v1.3.1 >/dev/null 2>&1; then
             gh release upload v1.3.1 LunoaConcierge-v1.3.1.apk --clobber
