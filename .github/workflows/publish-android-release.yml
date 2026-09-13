@@ -1,4 +1,4 @@
-name: Publish Android v1.1.18
+name: Publish Android v1.1.16
 
 on:
   push:
@@ -13,33 +13,33 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Verify v1.1.18 APK
+      - name: Verify v1.1.16 APK
         run: |
-          cp dist/LunoaConcierge-v1.1.18.apk LunoaConcierge-v1.1.18.apk
-          test -s LunoaConcierge-v1.1.18.apk
-          echo '3f92bae8b59d718e4c6e9e40c947ab0dfd071050a6877dd5a403f59e3a18ffb7  LunoaConcierge-v1.1.18.apk' | sha256sum --check -
+          cp dist/LunoaConcierge-v1.1.16.apk LunoaConcierge-v1.1.16.apk
+          test -s LunoaConcierge-v1.1.16.apk
+          echo '00122cd3e633d2ddf70bebaea24969f8a3072484ce257fcf9b70abbcf2655d14  LunoaConcierge-v1.1.16.apk' | sha256sum --check -
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           cat > release-notes.md <<'EOF'
-          ## Lunoa Concierge v1.1.18
+          ## Lunoa Concierge v1.1.16
 
           - 細かなバグの修正
 
           Android 8.0以降。正式パッケージIDは net.automationse.lunoaconcierge です。
 
-          SHA-256: 3f92bae8b59d718e4c6e9e40c947ab0dfd071050a6877dd5a403f59e3a18ffb7
+          SHA-256: 00122cd3e633d2ddf70bebaea24969f8a3072484ce257fcf9b70abbcf2655d14
           EOF
-          if gh release view v1.1.18 >/dev/null 2>&1; then
-            gh release upload v1.1.18 LunoaConcierge-v1.1.18.apk --clobber
-            gh release edit v1.1.18 --title 'Lunoa Concierge v1.1.18' --notes-file release-notes.md --latest
+          if gh release view v1.1.16 >/dev/null 2>&1; then
+            gh release upload v1.1.16 LunoaConcierge-v1.1.16.apk --clobber
+            gh release edit v1.1.16 --title 'Lunoa Concierge v1.1.16' --notes-file release-notes.md --latest
           else
-            gh release create v1.1.18 LunoaConcierge-v1.1.18.apk --title 'Lunoa Concierge v1.1.18' --notes-file release-notes.md --latest
+            gh release create v1.1.16 LunoaConcierge-v1.1.16.apk --title 'Lunoa Concierge v1.1.16' --notes-file release-notes.md --latest
           fi
       - name: Verify public release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.1.18'
-          gh release view v1.1.18 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.1.18.apk'
+          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.1.16'
+          gh release view v1.1.16 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.1.16.apk'
