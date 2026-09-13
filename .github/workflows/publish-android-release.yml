@@ -1,4 +1,4 @@
-name: Publish Android v1.1.15
+name: Publish Android v1.1.18
 
 on:
   push:
@@ -13,42 +13,33 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch verified v1.1.15 APK
-        env:
-          ARTIFACT_URL: "https://sdmntprkoreacentral.oaiusercontent.com/files/00000000-eb20-8206-a9bd-6c777536633e/raw?se=2026-09-12T21%3A53%3A19Z&sp=r&sv=2026-02-06&sr=b&scid=e37b5809-ab3d-5c2c-a56e-c6cb397839e3&skoid=bb372dd6-3b2a-4af2-b355-c26497ba23cd&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-12T19%3A35%3A21Z&ske=2026-09-13T19%3A35%3A21Z&sks=b&skv=2026-02-06&sig=nxB62Pm1no46zgQq8XyrO%2Bakpdm6WbVN9/L9u7nbjgw%3D"
+      - name: Verify v1.1.18 APK
         run: |
-          curl --fail --location "$ARTIFACT_URL" --output artifact.zip
-          unzip artifact.zip
-          mv app-release.apk LunoaConcierge-v1.1.15.apk
-          test -s LunoaConcierge-v1.1.15.apk
-          echo '5f1fbaa7af96f1df340f42b843b3571a1e696fe23fa3e2a6ff726cfd2064b339  LunoaConcierge-v1.1.15.apk' | sha256sum --check -
+          cp dist/LunoaConcierge-v1.1.18.apk LunoaConcierge-v1.1.18.apk
+          test -s LunoaConcierge-v1.1.18.apk
+          echo '3f92bae8b59d718e4c6e9e40c947ab0dfd071050a6877dd5a403f59e3a18ffb7  LunoaConcierge-v1.1.18.apk' | sha256sum --check -
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           cat > release-notes.md <<'EOF'
-          ## Lunoa Concierge v1.1.15
+          ## Lunoa Concierge v1.1.18
 
-          - ホーム画面の時刻をタップすると時計アプリを起動
-          - ホーム画面の日付をタップするとカレンダーアプリを起動
-          - 設定画面から、時刻タップで開く時計アプリを自由に選択可能
-          - 設定画面から、日付タップで開くカレンダーアプリを自由に選択可能
-          - 未設定時は端末標準の時計／カレンダーを使用
-          - 選択したアプリが削除されている場合も端末標準アプリへフォールバック
+          - 細かなバグの修正
 
           Android 8.0以降。正式パッケージIDは net.automationse.lunoaconcierge です。
 
-          SHA-256: 5f1fbaa7af96f1df340f42b843b3571a1e696fe23fa3e2a6ff726cfd2064b339
+          SHA-256: 3f92bae8b59d718e4c6e9e40c947ab0dfd071050a6877dd5a403f59e3a18ffb7
           EOF
-          if gh release view v1.1.15 >/dev/null 2>&1; then
-            gh release upload v1.1.15 LunoaConcierge-v1.1.15.apk --clobber
-            gh release edit v1.1.15 --title 'Lunoa Concierge v1.1.15' --notes-file release-notes.md --latest
+          if gh release view v1.1.18 >/dev/null 2>&1; then
+            gh release upload v1.1.18 LunoaConcierge-v1.1.18.apk --clobber
+            gh release edit v1.1.18 --title 'Lunoa Concierge v1.1.18' --notes-file release-notes.md --latest
           else
-            gh release create v1.1.15 LunoaConcierge-v1.1.15.apk --title 'Lunoa Concierge v1.1.15' --notes-file release-notes.md --latest
+            gh release create v1.1.18 LunoaConcierge-v1.1.18.apk --title 'Lunoa Concierge v1.1.18' --notes-file release-notes.md --latest
           fi
       - name: Verify public release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.1.15'
-          gh release view v1.1.15 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.1.15.apk'
+          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.1.18'
+          gh release view v1.1.18 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.1.18.apk'
