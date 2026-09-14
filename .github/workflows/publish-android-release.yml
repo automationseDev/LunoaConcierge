@@ -1,4 +1,4 @@
-name: Publish Android v1.3.3
+name: Publish Android v1.4.0
 
 on:
   push:
@@ -13,36 +13,35 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Verify v1.3.3 APK
+      - name: Verify v1.4.0 APK
         run: |
-          cp dist/LunoaConcierge-v1.3.3.apk LunoaConcierge-v1.3.3.apk
-          test -s LunoaConcierge-v1.3.3.apk
-          echo 'b72020fac6091c5dc256242b0734a7113ff13e26d33b9f47494b9e110a413361  LunoaConcierge-v1.3.3.apk' | sha256sum --check -
+          cp dist/LunoaConcierge-v1.4.0.apk LunoaConcierge-v1.4.0.apk
+          test -s LunoaConcierge-v1.4.0.apk
+          echo 'bbabd40d37a3096f5c5a1517e0f010f4e7aa04c4a062c993db607848d5112682  LunoaConcierge-v1.4.0.apk' | sha256sum --check -
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           cat > release-notes.md <<'EOF'
-          ## Lunoa Concierge v1.3.3
+          ## Lunoa Concierge v1.4.0
 
-          - 何でもメモのカテゴリー選択をモダンな専用画面へ刷新
-          - 自動分類の候補、標準カテゴリー、ユーザー作成カテゴリーを見やすく整理
-          - 独自カテゴリーを最大30個まで追加可能
-          - 作成したカテゴリーの選択と削除に対応
-          - 既存メモが参照するカテゴリーはカテゴリー一覧から削除しても保持
+          - お気に入りアプリのアイコンから、登録済みアプリペアを直接起動
+          - ホーム画面のルノア周辺に、2つのアプリアイコンを組み合わせたペアアイコンを表示
+          - ペアアイコンをタップして分割起動、長押ししてアプリペア管理画面を表示
+          - フローティングランチャーのお気に入りからもアプリペアを起動
 
           Android 8.0以降。正式パッケージIDは net.automationse.lunoaconcierge です。
-          SHA-256: b72020fac6091c5dc256242b0734a7113ff13e26d33b9f47494b9e110a413361
+          SHA-256: bbabd40d37a3096f5c5a1517e0f010f4e7aa04c4a062c993db607848d5112682
           EOF
-          if gh release view v1.3.3 >/dev/null 2>&1; then
-            gh release upload v1.3.3 LunoaConcierge-v1.3.3.apk --clobber
-            gh release edit v1.3.3 --title 'Lunoa Concierge v1.3.3' --notes-file release-notes.md --latest
+          if gh release view v1.4.0 >/dev/null 2>&1; then
+            gh release upload v1.4.0 LunoaConcierge-v1.4.0.apk --clobber
+            gh release edit v1.4.0 --title 'Lunoa Concierge v1.4.0' --notes-file release-notes.md --latest
           else
-            gh release create v1.3.3 LunoaConcierge-v1.3.3.apk --title 'Lunoa Concierge v1.3.3' --notes-file release-notes.md --latest
+            gh release create v1.4.0 LunoaConcierge-v1.4.0.apk --title 'Lunoa Concierge v1.4.0' --notes-file release-notes.md --latest
           fi
       - name: Verify public release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.3.3'
-          gh release view v1.3.3 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.3.3.apk'
+          test "$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)" = 'v1.4.0'
+          gh release view v1.4.0 --json assets --jq '.assets[].name' | grep -Fx 'LunoaConcierge-v1.4.0.apk'
